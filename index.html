@@ -14,7 +14,7 @@
         .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
         .form-group { flex: 1; display: flex; flex-direction: column; }
         label { font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #555; }
-        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; box-sizing: border-box; width: 100%; }
         .doc-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #f9f9f9; }
         .doc-table td { padding: 12px; border: 1px solid #eee; font-size: 14px; }
         .optional-tag { font-size: 11px; color: #0056b3; background: #e7f0ff; padding: 2px 6px; border-radius: 4px; margin-left: 5px; font-weight: normal; }
@@ -39,8 +39,8 @@
     <form id="portal-form">
         <h3>1. Datos Personales</h3>
         <div class="form-row">
-            <div class="form-group"><label>RUT <span class="required-star">*</span></label><input type="text" id="rut" required></div>
-            <div class="form-group"><label>Nacionalidad <span class="required-star">*</span></label><input type="text" id="nacionalidad" required></div>
+            <div class="form-group"><label>RUT (Ej: 12345678-9) <span class="required-star">*</span></label><input type="text" id="rut" placeholder="Sin puntos y con guion" required></div>
+            <div class="form-group"><label>Nacionalidad <span class="required-star">*</span></label><input type="text" id="nacionalidad" placeholder="Ej: Chilena" required></div>
         </div>
         <div class="form-group" style="margin-bottom:15px;"><label>Nombres <span class="required-star">*</span></label><input type="text" id="nombres" required></div>
         <div class="form-row">
@@ -51,17 +51,21 @@
             <div class="form-group"><label>Fecha de Nacimiento <span class="required-star">*</span></label><input type="date" id="fechaNacimiento" required></div>
             <div class="form-group"><label>Estado Civil <span class="required-star">*</span></label>
                 <select id="estadoCivil" required>
-                    <option value="">-- Seleccione --</option>
-                    <option value="Soltero/a">Soltero/a</option><option value="Casado/a">Casado/a</option><option value="Divorciado/a">Divorciado/a</option><option value="Viudo/a">Viudo/a</option><option value="Conviviente Civil">Conviviente Civil</option>
+                    <option value="">-- Seleccione Estado Civil --</option>
+                    <option value="Soltero/a">Soltero/a</option>
+                    <option value="Casado/a">Casado/a</option>
+                    <option value="Divorciado/a">Divorciado/a</option>
+                    <option value="Viudo/a">Viudo/a</option>
+                    <option value="Conviviente Civil">Conviviente Civil</option>
                 </select>
             </div>
         </div>
 
         <h3>2. Datos de Contacto</h3>
-        <div class="form-group" style="margin-bottom:15px;"><label>Dirección Particular <span class="required-star">*</span></label><input type="text" id="direccion" required></div>
+        <div class="form-group" style="margin-bottom:15px;"><label>Dirección Particular <span class="required-star">*</span></label><input type="text" id="direccion" placeholder="Calle, Número, Comuna" required></div>
         <div class="form-row">
-            <div class="form-group"><label>Teléfono Celular <span class="required-star">*</span></label><input type="text" id="telefono" required></div>
-            <div class="form-group"><label>Correo Electrónico <span class="required-star">*</span></label><input type="email" id="correo" required></div>
+            <div class="form-group"><label>Teléfono Celular <span class="required-star">*</span></label><input type="text" id="telefono" placeholder="+56 9..." required></div>
+            <div class="form-group"><label>Correo Electrónico Personal <span class="required-star">*</span></label><input type="email" id="correo" required></div>
         </div>
 
         <h3>3. Datos Laborales</h3>
@@ -69,65 +73,90 @@
             <div class="form-group"><label>Fecha de Ingreso <span class="required-star">*</span></label><input type="date" id="fechaIngreso" required></div>
             <div class="form-group"><label>Plazo de Contrato <span class="required-star">*</span></label>
                 <select id="plazoContrato" required>
-                    <option value="">-- Seleccione --</option>
-                    <option value="Plazo Fijo">Plazo Fijo</option><option value="Indefinido">Indefinido</option><option value="Por Obra o Faena">Por Obra o Faena</option>
+                    <option value="">-- Seleccione Plazo --</option>
+                    <option value="Plazo Fijo">Plazo Fijo</option>
+                    <option value="Indefinido">Indefinido</option>
+                    <option value="Por Obra o Faena">Por Obra o Faena</option>
                 </select>
             </div>
         </div>
         <div class="form-group" style="margin-bottom:15px;"><label>Sucursal / Centro de Costo <span class="required-star">*</span></label>
             <select id="sucursal" required>
-                <option value="">-- Seleccione --</option>
+                <option value="">-- Seleccione Sucursal --</option>
                 <option value="Preomed Arica">Preomed Arica</option><option value="Preomed Antofagasta Centro">Preomed Antofagasta Centro</option><option value="Preomed Antofagasta Norte">Preomed Antofagasta Norte</option><option value="Preomed Calama">Preomed Calama</option><option value="Preomed Concepción">Preomed Concepción</option><option value="Preomed Copiapó">Preomed Copiapó</option><option value="Preomed Iquique">Preomed Iquique</option><option value="Preomed La Serena">Preomed La Serena</option><option value="Preomed Ovalle">Preomed Ovalle</option><option value="Preomed Providencia">Preomed Providencia</option><option value="Preomed Puerto Montt">Preomed Puerto Montt</option><option value="Preomed Salamanca">Preomed Salamanca</option>
             </select>
         </div>
         <div class="form-row">
             <div class="form-group"><label>Cargo <span class="required-star">*</span></label>
                 <select id="cargo" required>
-                    <option value="">-- Seleccione --</option>
-                    <option value="Administrativo/a - Recepcionista">Administrativo/a - Recepcionista</option><option value="Enfermero/a">Enfermero/a</option><option value="TENS">TENS</option><option value="Médico">Médico</option> </select>
+                    <option value="">-- Seleccione Cargo --</option>
+                    <option value="Administrativo/a - Recepcionista">Administrativo/a - Recepcionista</option><option value="Asesor/a Comunicacional - Marketing y Publicidad">Asesor/a Comunicacional - Marketing y Publicidad</option><option value="Asistente Administrativo/a">Asistente Administrativo/a</option><option value="Auxiliar de Aseo">Auxiliar de Aseo</option><option value="Asistente de Finanzas">Asistente de Finanzas</option><option value="Coordinador/a de Operaciones">Coordinador/a de Operaciones</option><option value="Coordinador/a de Atención al Cliente">Coordinador/a de Atención al Cliente</option><option value="Director/a Técnico/a de Laboratorio">Director/a Técnico/a de Laboratorio</option><option value="Ejecutivo/a Comercial">Ejecutivo/a Comercial</option><option value="Ejecutivo/a de Ventas B2C - B2B">Ejecutivo/a de Ventas B2C - B2B</option><option value="Enfermero/a">Enfermero/a</option><option value="Enfermero/a Dirección Técnico">Enfermero/a Dirección Técnica</option><option value="Especialista en Fonoaudiología">Especialista en Fonoaudiología</option><option value="Especialista en Psicología">Especialista en Psicología</option><option value="Gerente Comercial">Gerente Comercial</option><option value="Gerente de Administración y Finanzas">Gerente de Administración y Finanzas</option><option value="Gerente de Operaciones">Gerente de Operaciones</option><option value="Gerente General">Gerente General</option><option value="Jefe/a de Sucursal">Jefe/a de Sucursal</option><option value="KAM (Key Account Manager)">KAM (Key Account Manager)</option><option value="KAM (Key Account Manager) Senior">KAM (Key Account Manager) Senior</option><option value="Médico Especialista en Salud Laboral">Médico Especialista en Salud Laboral</option><option value="Recepcionista">Recepcionista</option><option value="Recepcionista - TENS">Recepcionista - TENS</option><option value="Secretaria - Recepcionista">Secretaria - Recepcionista</option><option value="Subgerente Comercial">Subgerente Comercial</option><option value="Subgerente General">Subgerente General</option><option value="Supervisor/a de Sucursal">Supervisor/a de Sucursal</option><option value="Técnico en enfermería nivel superior">Técnico en enfermería nivel superior</option><option value="Tecnólogo/a Médico">Tecnólogo/a Médico</option><option value="Tecnólogo Médico-Otorrino">Tecnólogo Médico-Otorrino</option><option value="TENS - Administrativo/a">TENS - Administrativo/a</option>
+                </select>
             </div>
             <div class="form-group"><label>Jornada Laboral <span class="required-star">*</span></label>
                 <select id="jornada" required>
-                    <option value="">-- Seleccione --</option>
-                    <option value="Lunes a Viernes 08:00 a 17:00">Lunes a Viernes 08:00 a 17:00</option> </select>
+                    <option value="">-- Seleccione Jornada --</option>
+                    <option value="Lunes a Jueves de 08:00 a 17:00 hrs. - Viernes de 08:00 a 16:00 hrs. - Sábado de 09:00 a 12:00 hrs.">Lunes a Jueves de 08:00 a 17:00 hrs. - Viernes de 08:00 a 16:00 hrs. - Sábado de 09:00 a 12:00 hrs.</option>
+                    <option value="Lunes a Martes de 08:00 a 18:00 hrs. - Miércoles a Viernes de 08:00 a 17:00 hrs.">Lunes a Martes de 08:00 a 18:00 hrs. - Miércoles a Viernes de 08:00 a 17:00 hrs.</option>
+                    <option value="Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 09:00 a 12:00 hrs.">Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 09:00 a 12:00 hrs.</option>
+                    <option value="Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 08:30 a 12:30 hrs.">Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 08:30 a 12:30 hrs.</option>
+                    <option value="Lunes a Sábado de 08:00 a 13:00 hrs.">Lunes a Sábado de 08:00 a 13:00 hrs.</option>
+                </select>
             </div>
         </div>
-        <div class="form-group" style="margin-top:15px;"><label>Sueldo Líquido Pactado ($) <span class="required-star">*</span></label><input type="number" id="sueldo" required></div>
+        <div class="form-group" style="margin-top:15px;"><label>Sueldo Líquido Pactado ($) <span class="required-star">*</span></label><input type="number" id="sueldo" placeholder="Ej: 800000" required></div>
 
-        <h3>4. Previsión, Salud y Banco</h3>
+        <h3>4. Previsión y Salud</h3>
         <div class="form-row">
-            <div class="form-group"><label>AFP</label><select id="afp" required><option value="Capital">Capital</option><option value="Cuprum">Cuprum</option><option value="Habitat">Habitat</option><option value="Modelo">Modelo</option><option value="PlanVital">PlanVital</option><option value="Provida">Provida</option><option value="Uno">Uno</option></select></div>
-            <div class="form-group"><label>Salud</label><select id="salud" required><option value="Fonasa">Fonasa</option><option value="Isapre">Isapre</option></select></div>
-        </div>
-        <div class="form-row" style="margin-top:15px;">
-            <div class="form-group"><label>Banco</label><input type="text" id="banco" required></div>
-            <div class="form-group"><label>N° Cuenta</label><input type="text" id="numeroCuenta" required></div>
+            <div class="form-group"><label>AFP <span class="required-star">*</span></label>
+                <select id="afp" required>
+                    <option value="">-- Seleccione AFP --</option>
+                    <option value="Capital">Capital</option><option value="Cuprum">Cuprum</option><option value="Habitat">Habitat</option><option value="Modelo">Modelo</option><option value="PlanVital">PlanVital</option><option value="Provida">Provida</option><option value="Uno">Uno</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Sistema de Salud <span class="required-star">*</span></label>
+                <select id="salud" required>
+                    <option value="">-- Seleccione Salud --</option>
+                    <option value="Fonasa">Fonasa</option><option value="Banmédica">Isapre Banmédica</option><option value="Colmena">Isapre Colmena</option><option value="Consalud">Isapre Consalud</option><option value="Cruz Blanca">Isapre Cruz Blanca</option><option value="Nueva Masvida">Isapre Nueva Masvida</option><option value="Vida Tres">Isapre Vida Tres</option>
+                </select>
+            </div>
         </div>
 
-        <h3>5. Carga de Documentación Obligatoria</h3>
-        <p style="font-size:12px; color:#666; margin-bottom:10px;">Todos los campos marcados con <span class="required-star">*</span> son obligatorios para poder procesar su ingreso.</p>
+        <h3>5. Datos Bancarios</h3>
+        <div class="form-row">
+            <div class="form-group"><label>Institución Bancaria <span class="required-star">*</span></label>
+                <select id="banco" required>
+                    <option value="">-- Seleccione Banco --</option>
+                    <option value="BancoEstado">BancoEstado</option><option value="Banco de Chile">Banco de Chile</option><option value="Banco Santander">Banco Santander</option><option value="BCI">BCI</option><option value="Itaú">Itaú</option><option value="Scotiabank">Scotiabank</option><option value="Banco Falabella">Banco Falabella</option><option value="Banco BICE">Banco BICE</option><option value="Tenpo">Tenpo</option><option value="Mach">Mach</option>
+                </select>
+            </div>
+            <div class="form-group"><label>N° de Cuenta <span class="required-star">*</span></label><input type="text" id="numeroCuenta" placeholder="Ej: 123456789" required></div>
+        </div>
+
+        <h3>6. Carga de Documentación Obligatoria</h3>
+        <p style="font-size:12px; color:#666; margin-bottom:10px;">Todos los campos marcados con <span class="required-star">*</span> deben contener un archivo adjunto obligatoriamente.</p>
         
         <table class="doc-table">
-            <tr><td class="icon">💼</td><td>Carta Oferta <span class="optional-tag">Opcional</span></td><td><input type="file" id="f_carta" accept=".pdf,.png,.jpg"></td></tr>
-            <tr><td class="icon">🏦</td><td>Certificado AFP <span class="required-star">*</span></td><td><input type="file" id="f_afp" accept=".pdf,.png,.jpg" required></td></tr>
-            <tr><td class="icon">🏥</td><td>Certificado Salud <span class="required-star">*</span></td><td><input type="file" id="f_salud" accept=".pdf,.png,.jpg" required></td></tr>
-            <tr><td class="icon">🪪</td><td>Cédula Identidad <span class="required-star">*</span></td><td><input type="file" id="f_cedula" accept=".pdf,.png,.jpg" required></td></tr>
+            <tr><td class="icon">🏦</td><td>Certificado afiliación AFP <span class="required-star">*</span></td><td><input type="file" id="f_afp" accept=".pdf,.png,.jpg" required></td></tr>
+            <tr><td class="icon">🏥</td><td>Certificado afiliación Salud (Fonasa - Isapre) <span class="required-star">*</span></td><td><input type="file" id="f_salud" accept=".pdf,.png,.jpg" required></td></tr>
+            <tr><td class="icon">🪪</td><td>Cédula de Identidad por ambos lados <span class="required-star">*</span></td><td><input type="file" id="f_cedula" accept=".pdf,.png,.jpg" required></td></tr>
             <tr><td class="icon">📄</td><td>Currículum Vitae <span class="required-star">*</span></td><td><input type="file" id="f_cv" accept=".pdf,.png,.jpg" required></td></tr>
-            <tr><td class="icon">👨‍👩‍👦</td><td>Cargas Familiares <span class="required-star">*</span></td><td><input type="file" id="f_cargas" accept=".pdf,.png,.jpg" required></td></tr>
-            <tr><td class="icon">💉</td><td>Vacunas COVID <span class="required-star">*</span></td><td><input type="file" id="f_vacunas" accept=".pdf,.png,.jpg" required></td></tr>
-            <tr><td class="icon">⚖️</td><td>Antecedentes <span class="required-star">*</span></td><td><input type="file" id="f_antecedentes" accept=".pdf,.png,.jpg" required></td></tr>
-            <tr><td class="icon">🏠</td><td>Comprobante Domicilio <span class="required-star">*</span></td><td><input type="file" id="f_domicilio" accept=".pdf,.png,.jpg" required></td></tr>
+            <tr><td class="icon">👨‍👩‍👦</td><td>Certificado de Cargas Familiares <span class="required-star">*</span></td><td><input type="file" id="f_cargas" accept=".pdf,.png,.jpg" required></td></tr>
+            <tr><td class="icon">💉</td><td>Comprobante Vacunas COVID al día <span class="required-star">*</span></td><td><input type="file" id="f_vacunas" accept=".pdf,.png,.jpg" required></td></tr>
+            <tr><td class="icon">⚖️</td><td>Certificado de Antecedentes para fines especiales <span class="required-star">*</span></td><td><input type="file" id="f_antecedentes" accept=".pdf,.png,.jpg" required></td></tr>
+            <tr><td class="icon">🏠</td><td>Comprobante de domicilio <span class="required-star">*</span></td><td><input type="file" id="f_domicilio" accept=".pdf,.png,.jpg" required></td></tr>
             <tr><td class="icon">🎓</td><td>Certificado de Título <span class="required-star">*</span></td><td><input type="file" id="f_titulo" accept=".pdf,.png,.jpg" required></td></tr>
+            <tr><td class="icon">💼</td><td>Carta Oferta Firmada <span class="optional-tag">Opcional</span></td><td><input type="file" id="f_carta" accept=".pdf,.png,.jpg"></td></tr>
         </table>
 
         <button type="submit" class="btn-enviar" id="btn-portal">Finalizar e Iniciar Incorporación</button>
-        <div id="loading" class="loading">Subiendo archivos y generando expediente... espere un momento.</div>
+        <div id="loading" class="loading">Subiendo archivos y generando expediente... espere un momento por favor.</div>
         <div id="alerta" class="alerta"></div>
     </form>
 </div>
 
 <script>
-    const scriptURL = 'TU_URL_DE_SCRIPT_AQUI';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx7wFzVpimtZoiburb_1cJ1vNx21VQQCRH4hiIw52xcdtguc8tzXrdwRZzYFG1YinLdLA/exec';
 
     const form = document.getElementById('portal-form');
     const toBase64 = file => new Promise((resolve, reject) => {
@@ -166,7 +195,7 @@
             files: {}
         };
 
-        const fileIds = { carta:'f_carta', afp:'f_afp', salud:'f_salud', cedula:'f_cedula', cv:'f_cv', cargas:'f_cargas', vacunas:'f_vacunas', antecedentes:'f_antecedentes', domicilio:'f_domicilio', titulo:'f_titulo' };
+        const fileIds = { afp:'f_afp', salud:'f_salud', cedula:'f_cedula', cv:'f_cv', cargas:'f_cargas', vacunas:'f_vacunas', antecedentes:'f_antecedentes', domicilio:'f_domicilio', titulo:'f_titulo', carta:'f_carta' };
         
         for (const [key, id] of Object.entries(fileIds)) {
             const input = document.getElementById(id);
@@ -181,7 +210,7 @@
             alerta.style.display = 'block';
             if(res.result === 'success') {
                 alerta.className = 'alerta exito';
-                alerta.innerText = '¡Proceso Completado! Documentación recibida y archivada.';
+                alerta.innerText = '¡Proceso Completado! Documentación recibida y archivada en su expediente.';
                 form.reset();
             } else { throw new Error(res.error); }
         })
