@@ -14,7 +14,7 @@
         }
 
         .formulario-container {
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
             background-color: #fff;
             padding: 40px;
@@ -37,6 +37,15 @@
             margin-bottom: 30px;
             border-bottom: 2px solid #e9ecef;
             padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #495057;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
         }
 
         .form-group {
@@ -62,6 +71,8 @@
 
         input[type="text"],
         input[type="email"],
+        input[type="date"],
+        input[type="number"],
         select {
             width: 100%;
             padding: 12px;
@@ -89,7 +100,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
         button:hover {
@@ -122,10 +133,15 @@
 
         <form id="formulario-ingreso">
             
+            <h3>1. Datos Personales</h3>
             <div class="form-row">
                 <div class="form-col form-group">
                     <label for="rut">RUT (Ej: 12345678-9)</label>
                     <input type="text" id="rut" name="rut" required placeholder="Sin puntos y con guion">
+                </div>
+                <div class="form-col form-group">
+                    <label for="nacionalidad">Nacionalidad</label>
+                    <input type="text" id="nacionalidad" name="nacionalidad" required placeholder="Ej: Chilena">
                 </div>
             </div>
 
@@ -147,7 +163,236 @@
 
             <div class="form-row">
                 <div class="form-col form-group">
+                    <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                </div>
+                <div class="form-col form-group">
+                    <label for="estadoCivil">Estado Civil</label>
+                    <select id="estadoCivil" name="estadoCivil" required>
+                        <option value="">-- Seleccione Estado Civil --</option>
+                        <option value="Soltero/a">Soltero/a</option>
+                        <option value="Casado/a">Casado/a</option>
+                        <option value="Divorciado/a">Divorciado/a</option>
+                        <option value="Viudo/a">Viudo/a</option>
+                        <option value="Conviviente Civil">Conviviente Civil</option>
+                    </select>
+                </div>
+            </div>
+
+            <h3>2. Datos de Contacto</h3>
+            <div class="form-group">
+                <label for="direccion">Dirección Particular</label>
+                <input type="text" id="direccion" name="direccion" required placeholder="Calle, Número, Comuna">
+            </div>
+
+            <div class="form-row">
+                <div class="form-col form-group">
                     <label for="telefono">Teléfono Celular</label>
                     <input type="text" id="telefono" name="telefono" required placeholder="+56 9...">
                 </div>
-                <div class="form-col
+                <div class="form-col form-group">
+                    <label for="correo">Correo Electrónico Personal</label>
+                    <input type="email" id="correo" name="correo" required>
+                </div>
+            </div>
+
+            <h3>3. Datos Laborales</h3>
+            <div class="form-row">
+                <div class="form-col form-group">
+                    <label for="fechaIngreso">Fecha de Ingreso</label>
+                    <input type="date" id="fechaIngreso" name="fechaIngreso" required>
+                </div>
+                <div class="form-col form-group">
+                    <label for="plazoContrato">Plazo de Contrato</label>
+                    <select id="plazoContrato" name="plazoContrato" required>
+                        <option value="">-- Seleccione --</option>
+                        <option value="Plazo Fijo">Plazo Fijo</option>
+                        <option value="Indefinido">Indefinido</option>
+                        <option value="Por Obra o Faena">Por Obra o Faena</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sucursal">Sucursal / Centro de Costo</label>
+                <select id="sucursal" name="sucursal" required>
+                    <option value="">-- Seleccione Sucursal --</option>
+                    <option value="Preomed Arica">Preomed Arica</option>
+                    <option value="Preomed Antofagasta Centro">Preomed Antofagasta Centro</option>
+                    <option value="Preomed Antofagasta Norte">Preomed Antofagasta Norte</option>
+                    <option value="Preomed Calama">Preomed Calama</option>
+                    <option value="Preomed Concepción">Preomed Concepción</option>
+                    <option value="Preomed Copiapó">Preomed Copiapó</option>
+                    <option value="Preomed Iquique">Preomed Iquique</option>
+                    <option value="Preomed La Serena">Preomed La Serena</option>
+                    <option value="Preomed Ovalle">Preomed Ovalle</option>
+                    <option value="Preomed Providencia">Preomed Providencia</option>
+                    <option value="Preomed Puerto Montt">Preomed Puerto Montt</option>
+                    <option value="Preomed Salamanca">Preomed Salamanca</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-col form-group">
+                    <label for="cargo">Cargo</label>
+                    <select id="cargo" name="cargo" required>
+                        <option value="">-- Seleccione Cargo --</option>
+                        <option value="Administrativo/a - Recepcionista">Administrativo/a - Recepcionista</option>
+                        <option value="Asesor/a Comunicacional - Marketing y Publicidad">Asesor/a Comunicacional - Marketing y Publicidad</option>
+                        <option value="Asistente Administrativo/a">Asistente Administrativo/a</option>
+                        <option value="Auxiliar de Aseo">Auxiliar de Aseo</option>
+                        <option value="Asistente de Finanzas">Asistente de Finanzas</option>
+                        <option value="Coordinador/a de Operaciones">Coordinador/a de Operaciones</option>
+                        <option value="Coordinador/a de Atención al Cliente">Coordinador/a de Atención al Cliente</option>
+                        <option value="Director/a Técnico/a de Laboratorio">Director/a Técnico/a de Laboratorio</option>
+                        <option value="Ejecutivo/a Comercial">Ejecutivo/a Comercial</option>
+                        <option value="Ejecutivo/a de Ventas B2C - B2B">Ejecutivo/a de Ventas B2C - B2B</option>
+                        <option value="Enfermero/a">Enfermero/a</option>
+                        <option value="Enfermero/a Dirección Técnica">Enfermero/a Dirección Técnica</option>
+                        <option value="Especialista en Fonoaudiología">Especialista en Fonoaudiología</option>
+                        <option value="Especialista en Psicología">Especialista en Psicología</option>
+                        <option value="Gerente Comercial">Gerente Comercial</option>
+                        <option value="Gerente de Administración y Finanzas">Gerente de Administración y Finanzas</option>
+                        <option value="Gerente de Operaciones">Gerente de Operaciones</option>
+                        <option value="Gerente General">Gerente General</option>
+                        <option value="Jefe/a de Sucursal">Jefe/a de Sucursal</option>
+                        <option value="KAM (Key Account Manager)">KAM (Key Account Manager)</option>
+                        <option value="KAM (Key Account Manager) Senior">KAM (Key Account Manager) Senior</option>
+                        <option value="Médico Especialista en Salud Laboral">Médico Especialista en Salud Laboral</option>
+                        <option value="Recepcionista">Recepcionista</option>
+                        <option value="Recepcionista - TENS">Recepcionista - TENS</option>
+                        <option value="Secretaria - Recepcionista">Secretaria - Recepcionista</option>
+                        <option value="Subgerente Comercial">Subgerente Comercial</option>
+                        <option value="Subgerente General">Subgerente General</option>
+                        <option value="Supervisor/a de Sucursal">Supervisor/a de Sucursal</option>
+                        <option value="Técnico en enfermería nivel superior">Técnico en enfermería nivel superior</option>
+                        <option value="Tecnólogo/a Médico">Tecnólogo/a Médico</option>
+                        <option value="Tecnólogo Médico-Otorrino">Tecnólogo Médico-Otorrino</option>
+                        <option value="TENS - Administrativo/a">TENS - Administrativo/a</option>
+                    </select>
+                </div>
+                
+                <div class="form-col form-group">
+                    <label for="jornada">Jornada Laboral</label>
+                    <select id="jornada" name="jornada" required>
+                        <option value="">-- Seleccione Jornada --</option>
+                        <option value="Jornada Completa">Jornada Completa</option>
+                        <option value="Part-Time">Part-Time</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sueldo">Sueldo Líquido Pactado ($)</label>
+                <input type="number" id="sueldo" name="sueldo" required placeholder="Ej: 800000">
+            </div>
+
+            <h3>4. Previsión y Salud</h3>
+            <div class="form-row">
+                <div class="form-col form-group">
+                    <label for="afp">AFP</label>
+                    <select id="afp" name="afp" required>
+                        <option value="">-- Seleccione AFP --</option>
+                        <option value="Capital">Capital</option>
+                        <option value="Cuprum">Cuprum</option>
+                        <option value="Habitat">Habitat</option>
+                        <option value="Modelo">Modelo</option>
+                        <option value="PlanVital">PlanVital</option>
+                        <option value="Provida">Provida</option>
+                        <option value="Uno">Uno</option>
+                    </select>
+                </div>
+                <div class="form-col form-group">
+                    <label for="salud">Sistema de Salud</label>
+                    <select id="salud" name="salud" required>
+                        <option value="">-- Seleccione Salud --</option>
+                        <option value="Fonasa">Fonasa</option>
+                        <option value="Banmédica">Isapre Banmédica</option>
+                        <option value="Colmena">Isapre Colmena</option>
+                        <option value="Consalud">Isapre Consalud</option>
+                        <option value="Cruz Blanca">Isapre Cruz Blanca</option>
+                        <option value="Nueva Masvida">Isapre Nueva Masvida</option>
+                        <option value="Vida Tres">Isapre Vida Tres</option>
+                    </select>
+                </div>
+            </div>
+
+            <h3>5. Datos Bancarios</h3>
+            <div class="form-row">
+                <div class="form-col form-group">
+                    <label for="banco">Institución Bancaria</label>
+                    <select id="banco" name="banco" required>
+                        <option value="">-- Seleccione Banco --</option>
+                        <option value="BancoEstado">BancoEstado</option>
+                        <option value="Banco de Chile">Banco de Chile</option>
+                        <option value="Banco Santander">Banco Santander</option>
+                        <option value="BCI">BCI</option>
+                        <option value="Itaú">Itaú</option>
+                        <option value="Scotiabank">Scotiabank</option>
+                        <option value="Banco Falabella">Banco Falabella</option>
+                        <option value="Banco BICE">Banco BICE</option>
+                        <option value="Tenpo">Tenpo</option>
+                        <option value="Mach">Mach</option>
+                    </select>
+                </div>
+                <div class="form-col form-group">
+                    <label for="numeroCuenta">N° de Cuenta</label>
+                    <input type="text" id="numeroCuenta" name="numeroCuenta" required placeholder="Ej: 123456789">
+                </div>
+            </div>
+
+            <button type="submit" id="btn-enviar">Registrar Ingreso</button>
+            <div id="loading" class="loading">Enviando datos a la base de datos, por favor espere...</div>
+            <div id="mensaje-alerta" class="alerta"></div>
+            
+        </form>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwTeSMB8AVP6M9V3oBCy9CFoFRjthTwn4Jd_5LZZetSoU_GzJ7GXnAaA7TE1QalEab2IA/exec';
+        
+        const form = document.getElementById('formulario-ingreso');
+        const btnEnviar = document.getElementById('btn-enviar');
+        const loading = document.getElementById('loading');
+        const alerta = document.getElementById('mensaje-alerta');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault(); 
+            
+            btnEnviar.style.display = 'none';
+            loading.style.display = 'block';
+            alerta.style.display = 'none';
+
+            const formData = new FormData(form);
+            const dataObj = Object.fromEntries(formData.entries());
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataObj)
+            })
+            .then(response => {
+                loading.style.display = 'none';
+                btnEnviar.style.display = 'block';
+                alerta.className = 'alerta exito';
+                alerta.innerText = '¡Ficha de ingreso guardada exitosamente!';
+                alerta.style.display = 'block';
+                
+                form.reset();
+                setTimeout(() => { alerta.style.display = 'none'; }, 5000);
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                btnEnviar.style.display = 'block';
+                alerta.className = 'alerta error';
+                alerta.innerText = 'Hubo un error al guardar. Inténtelo de nuevo.';
+                alerta.style.display = 'block';
+                console.error('Error!', error.message);
+            });
+        });
+    </script>
+</body>
+</html>
