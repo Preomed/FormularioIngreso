@@ -13,7 +13,7 @@
         h3 { background-color: #0056b3; color: white; padding: 10px; border-radius: 5px; font-size: 18px; margin-top: 30px; }
         .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
         .form-group { flex: 1; display: flex; flex-direction: column; }
-        .form-group-large { flex: 2; display: flex; flex-direction: column; } /* Nueva clase para dar más espacio a la dirección */
+        .form-group-large { flex: 2; display: flex; flex-direction: column; }
         label { font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #555; }
         input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; box-sizing: border-box; width: 100%; }
         .doc-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #f9f9f9; }
@@ -39,17 +39,21 @@
 
     <form id="portal-form">
         <h3>1. Datos Personales</h3>
-        <div class="form-row">
-            <div class="form-group"><label>RUT (Ej: 12345678-9) <span class="required-star">*</span></label><input type="text" id="rut" placeholder="Sin puntos y con guion" required></div>
-            <div class="form-group"><label>Nacionalidad <span class="required-star">*</span></label><input type="text" id="nacionalidad" placeholder="Ej: Chilena" required></div>
-        </div>
+        
         <div class="form-group" style="margin-bottom:15px;"><label>Nombres <span class="required-star">*</span></label><input type="text" id="nombres" required></div>
+        
         <div class="form-row">
             <div class="form-group"><label>Apellido Paterno <span class="required-star">*</span></label><input type="text" id="apellidoPaterno" required></div>
             <div class="form-group"><label>Apellido Materno <span class="required-star">*</span></label><input type="text" id="apellidoMaterno" required></div>
         </div>
+        
         <div class="form-row">
+            <div class="form-group"><label>RUT (Ej: 12345678-9) <span class="required-star">*</span></label><input type="text" id="rut" placeholder="Sin puntos y con guion" required></div>
             <div class="form-group"><label>Fecha de Nacimiento <span class="required-star">*</span></label><input type="date" id="fechaNacimiento" required></div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group"><label>Nacionalidad <span class="required-star">*</span></label><input type="text" id="nacionalidad" placeholder="Ej: Chilena" required></div>
             <div class="form-group"><label>Estado Civil <span class="required-star">*</span></label>
                 <select id="estadoCivil" required>
                     <option value="">-- Seleccione Estado Civil --</option>
@@ -234,7 +238,7 @@
             fechaNacimiento: document.getElementById('fechaNacimiento').value,
             estadoCivil: document.getElementById('estadoCivil').value,
             direccion: document.getElementById('direccion').value,
-            comuna: document.getElementById('comuna').value, // <--- NUEVO DATO RECOPILADO
+            comuna: document.getElementById('comuna').value,
             telefono: inputTelefono.value,
             correo: document.getElementById('correo').value,
             fechaIngreso: document.getElementById('fechaIngreso').value,
