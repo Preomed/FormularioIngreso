@@ -25,7 +25,6 @@
         .btn-enviar:hover { background-color: #218838; }
         .loading { display: none; text-align: center; color: #0056b3; font-weight: bold; margin-top: 20px; }
         
-        /* NUEVOS ESTILOS PARA LA BARRA DE PROGRESO */
         .progress-container { width: 100%; background-color: #e0e0e0; border-radius: 5px; margin-top: 15px; overflow: hidden; height: 12px; }
         .progress-bar { height: 100%; width: 0%; background-color: #0056b3; transition: width 0.4s ease; }
         
@@ -139,7 +138,16 @@
             <div class="form-group"><label>Institución Bancaria <span class="required-star">*</span></label>
                 <select id="banco" required>
                     <option value="">-- Seleccione Banco --</option>
-                    <option value="Estado">Estado</option><option value="de Chile">de Chile</option><option value="Santander">Santander</option><option value="BCI">BCI</option><option value="Itaú">Itaú</option><option value="Scotiabank">Scotiabank</option><option value="Falabella">Falabella</option><option value="BICE">BICE</option><option value="Tenpo">Tenpo</option><option value="Mach">Mach</option>
+                    <option value="Banco Estado">Banco Estado</option>
+                    <option value="Banco de Chile">Banco de Chile</option>
+                    <option value="Banco Santander">Banco Santander</option>
+                    <option value="Banco BCI">Banco BCI</option>
+                    <option value="Banco Itaú">Banco Itaú</option>
+                    <option value="Banco Scotiabank">Banco Scotiabank</option>
+                    <option value="Banco Falabella">Banco Falabella</option>
+                    <option value="Banco BICE">Banco BICE</option>
+                    <option value="Banco Tenpo">Banco Tenpo</option>
+                    <option value="Banco Mach">Banco Mach</option>
                 </select>
             </div>
             <div class="form-group"><label>Tipo de Cuenta <span class="required-star">*</span></label>
@@ -256,13 +264,8 @@
     form.addEventListener('submit', async e => {
         e.preventDefault();
         
-        if (inputRut.value.length < 9) {
-            alert("Por favor, ingrese un RUT válido completo.");
-            return;
-        }
-
-        const numPart = inputTelefono.value.substring(6).replace(/\D/g, '');
-        if (numPart.length !== 8) {
+        const numTelefonoLimpio = inputTelefono.value.substring(6).replace(/\D/g, '');
+        if (numTelefonoLimpio.length !== 8) {
             alert("Por favor, complete los 8 dígitos correspondientes a su número de teléfono celular.");
             return;
         }
@@ -273,11 +276,17 @@
             return;
         }
 
-        // --- INICIO DE LÓGICA DE BARRA DE PROGRESO ---
+        const tipoCuentaSeleccionada = document.getElementById('tipoCuenta').value;
+        const tipoCuentaLimpia = tipoCuentaSeleccionada.replace("Cuenta ", "");
+
+        // 🛠️ FILTRO NUEVO: Remueve la palabra "Banco " del texto seleccionado
+        const bancoSeleccionado = document.getElementById('banco').value;
+        const bancoLimpio = bancoSeleccionado.replace("Banco ", "");
+
         document.getElementById('btn-portal').style.display = 'none';
         document.getElementById('loading').style.display = 'block';
         const progressBar = document.getElementById('progress-bar');
-        progressBar.style.width = '5%'; // Inicia un poquito para mostrar que arrancó
+        progressBar.style.width = '5%';
 
         const data = {
             rut: document.getElementById('rut').value,
@@ -289,7 +298,7 @@
             estadoCivil: document.getElementById('estadoCivil').value,
             direccion: document.getElementById('direccion').value,
             comuna: document.getElementById('comuna').value,
-            telefono: inputTelefono.value,
+            telefono: numTelefonoLimpio,
             correo: document.getElementById('correo').value,
             fechaIngreso: document.getElementById('fechaIngreso').value,
             plazoContrato: document.getElementById('plazoContrato').value,
@@ -299,15 +308,14 @@
             sueldo: sueldoLimpio,
             afp: document.getElementById('afp').value,
             salud: document.getElementById('salud').value,
-            banco: document.getElementById('banco').value,
-            tipoCuenta: document.getElementById('tipoCuenta').value,
+            banco: bancoLimpio, // <-- Se envía SIN el prefijo "Banco "
+            tipoCuenta: tipoCuentaLimpia,
             numeroCuenta: document.getElementById('numeroCuenta').value,
             files: {}
         };
 
         const fileIds = { afp:'f_afp', salud:'f_salud', cedula:'f_cedula', cv:'f_cv', vacunas:'f_vacunas', antecedentes:'f_antecedentes', domicilio:'f_domicilio', titulo:'f_titulo', cargas:'f_cargas', carta:'f_carta' };
         
-        // Fase 1: Lectura de archivos (Avanza la barra hasta el 40%)
         const activeFiles = Object.keys(fileIds).filter(key => document.getElementById(fileIds[key]).files.length > 0);
         let filesProcessed = 0;
 
@@ -320,23 +328,21 @@
             }
         }
 
-        // Fase 2: Envío a servidor (Simula el progreso del 40% al 90%)
         let currentProgress = 40;
         const progressInterval = setInterval(() => {
             if (currentProgress < 90) {
-                currentProgress += Math.random() * 5; // Aumenta de forma variable
+                currentProgress += Math.random() * 5;
                 progressBar.style.width = currentProgress + '%';
             }
         }, 600);
 
-        // Envío final
         fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) })
         .then(res => res.json())
         .then(res => {
             clearInterval(progressInterval);
-            progressBar.style.width = '100%'; // Fase 3: Llegó al 100%
+            progressBar.style.width = '100%';
             
-            setTimeout(() => { // Pequeña pausa para que el usuario vea la barra llena
+            setTimeout(() => {
                 document.getElementById('loading').style.display = 'none';
                 const alerta = document.getElementById('alerta');
                 alerta.style.display = 'block';
@@ -346,7 +352,7 @@
                     form.reset();
                     inputTelefono.value = "+56 9 ";
                     inputSueldo.value = "$ ";
-                    progressBar.style.width = '0%'; // Resetea la barra para el futuro
+                    progressBar.style.width = '0%';
                 } else { throw new Error(res.error); }
             }, 600);
         })
