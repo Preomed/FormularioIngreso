@@ -14,7 +14,7 @@
         .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
         .form-group { flex: 1; display: flex; flex-direction: column; }
         .form-group-large { flex: 2; display: flex; flex-direction: column; }
-        label { font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #555; }
+        label { font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #555; margin-bottom: 5px; }
         input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; box-sizing: border-box; width: 100%; }
         .doc-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #f9f9f9; }
         .doc-table td { padding: 12px; border: 1px solid #eee; font-size: 14px; }
@@ -112,11 +112,11 @@
             <div class="form-group"><label>Jornada Laboral <span class="required-star">*</span></label>
                 <select id="jornada" required>
                     <option value="">-- Seleccione Jornada --</option>
-                    <option value="Lunes a Jueves de 08:00 a 17:00 hrs. - Viernes de 08:00 a 16:00 hrs. - Sábado de 09:00 a 12:00 hrs.">Lunes a Jueves de 08:00 a 17:00 hrs. - Viernes de 08:00 a 16:00 hrs. - Sábado de 09:00 a 12:00 hrs.</option>
-                    <option value="Lunes a Martes de 08:00 a 18:00 hrs. - Miércoles a Viernes de 08:00 a 17:00 hrs.">Lunes a Martes de 08:00 a 18:00 hrs. - Miércoles a Viernes de 08:00 a 17:00 hrs.</option>
-                    <option value="Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 09:00 a 12:00 hrs.">Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 09:00 a 12:00 hrs.</option>
-                    <option value="Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 08:30 a 12:30 hrs.">Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 08:30 a 12:30 hrs.</option>
-                    <option value="Lunes a Sábado de 08:00 a 13:00 hrs.">Lunes a Sábado de 08:00 a 13:00 hrs.</option>
+                    <option value="- Lunes a Jueves de 08:00 a 17:00 hrs. - Viernes de 08:00 a 16:00 hrs. - Sábado de 09:00 a 12:00 hrs.">- Lunes a Jueves de 08:00 a 17:00 hrs. - Viernes de 08:00 a 16:00 hrs. - Sábado de 09:00 a 12:00 hrs.</option>
+                    <option value="- Lunes a Martes de 08:00 a 18:00 hrs. - Miércoles a Viernes de 08:00 a 17:00 hrs.">- Lunes a Martes de 08:00 a 18:00 hrs. - Miércoles a Viernes de 08:00 a 17:00 hrs.</option>
+                    <option value="- Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 08:30 a 12:30 hrs.">- Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 08:30 a 12:30 hrs.</option>
+                    <option value="- Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 09:00 a 13:00 hrs.">- Lunes a Viernes de 08:00 a 13:00 hrs. - Sábado de 09:00 a 13:00 hrs.</option>
+                    <option value="- Lunes a Sábado de 08:00 a 13:00 hrs.">- Lunes a Sábado de 08:00 a 13:00 hrs.</option>
                 </select>
             </div>
         </div>
@@ -270,7 +270,6 @@
     form.addEventListener('submit', async e => {
         e.preventDefault();
         
-        // --- 🛠️ VALIDACIÓN MATEMÁTICA DE RUT CHILENO (MÓDULO 11) ---
         const validarRutChileno = (rutCompleto) => {
             if (!rutCompleto || !rutCompleto.includes('-')) return false;
             let partes = rutCompleto.split('-');
@@ -295,7 +294,6 @@
             alert("El RUT ingresado no es válido matemáticamente. Por favor, verifique los números y el dígito verificador.");
             return;
         }
-        // -----------------------------------------------------------
 
         const numTelefonoLimpio = inputTelefono.value.substring(6).replace(/\D/g, '');
         if (numTelefonoLimpio.length !== 8) {
