@@ -39,7 +39,6 @@
 
     <form id="portal-form">
         <h3>1. Datos Personales</h3>
-        
         <div class="form-group" style="margin-bottom:15px;"><label>Nombres <span class="required-star">*</span></label><input type="text" id="nombres" required></div>
         
         <div class="form-row">
@@ -48,7 +47,7 @@
         </div>
         
         <div class="form-row">
-            <div class="form-group"><label>RUT (Ej: 12345678-9) <span class="required-star">*</span></label><input type="text" id="rut" placeholder="Sin puntos y con guion" required></div>
+            <div class="form-group"><label>RUT (Ej: 12345678-9) <span class="required-star">*</span></label><input type="text" id="rut" placeholder="Ingrese RUT sin puntos ni guion" required></div>
             <div class="form-group"><label>Fecha de Nacimiento <span class="required-star">*</span></label><input type="date" id="fechaNacimiento" required></div>
         </div>
         
@@ -176,6 +175,42 @@
 
     const form = document.getElementById('portal-form');
     
+    // --- CONTROL DEL RUT (NUEVO) ---
+    const inputRut = document.getElementById('rut');
+    
+    // 1. Formateo dinámico mientras escribe
+    inputRut.addEventListener('input', function(e) {
+        // Deja solo números y la letra K/k, y lo pasa a mayúscula
+        let valor = inputRut.value.replace(/[^0-9kK]/g, '').toUpperCase();
+        
+        // Limita a 9 caracteres puros (8 números + 1 dígito verificador)
+        if (valor.length > 9) {
+            valor = valor.substring(0, 9);
+        }
+        
+        // Inserta el guion automáticamente antes del último dígito
+        if (valor.length > 1) {
+            valor = valor.slice(0, -1) + '-' + valor.slice(-1);
+        }
+        
+        inputRut.value = valor;
+    });
+
+    // 2. Autocompletar con '0' a la izquierda si el usuario ingresó 7 números
+    inputRut.addEventListener('blur', function(e) {
+        let valor = inputRut.value;
+        if (valor.includes('-')) {
+            let partes = valor.split('-');
+            let numeros = partes[0];
+            let verificador = partes[1];
+            
+            // Si el bloque de números tiene exactamente 7 dígitos, agrega el cero inicial
+            if (numeros.length === 7) {
+                inputRut.value = '0' + numeros + '-' + verificador;
+            }
+        }
+    });
+
     // --- CONTROL DEL TELÉFONO ---
     const inputTelefono = document.getElementById('telefono');
     inputTelefono.addEventListener('input', function(e) {
@@ -214,6 +249,12 @@
     form.addEventListener('submit', async e => {
         e.preventDefault();
         
+        // Validación RUT básico antes de enviar
+        if (inputRut.value.length < 9) {
+            alert("Por favor, ingrese un RUT válido completo.");
+            return;
+        }
+
         const numPart = inputTelefono.value.substring(6).replace(/\D/g, '');
         if (numPart.length !== 8) {
             alert("Por favor, complete los 8 dígitos correspondientes a su número de teléfono celular.");
