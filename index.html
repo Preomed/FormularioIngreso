@@ -234,7 +234,8 @@
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx7wFzVpimtZoiburb_1cJ1vNx21VQQCRH4hiIw52xcdtguc8tzXrdwRZzYFG1YinLdLA/exec';
+    // 🌟 URL NUEVA Y ACTUALIZADA VINCULADA DE FORMA IMPECA BLE
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbz86f50GOM_vhmVriUe69gTLOumRpg0GSAskT0OIcaZk37RjKx6w99jTQy8DQC-t0O58Q/exec';
     const form = document.getElementById('portal-form');
     
     const textFields = ['nombres', 'apellidoPaterno', 'apellidoMaterno', 'comuna', 'nacionalidad'];
@@ -301,7 +302,6 @@
     form.addEventListener('submit', async e => {
         e.preventDefault();
         
-        // --- VALIDACIÓN MATEMÁTICA DE RUT CHILENO (MÓDULO 11) ---
         const validarRutChileno = (rutCompleto) => {
             if (!rutCompleto || !rutCompleto.includes('-')) return false;
             let partes = rutCompleto.split('-');
