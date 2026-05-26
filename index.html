@@ -137,6 +137,14 @@
                     <option value="Estado">Estado</option><option value="de Chile">de Chile</option><option value="Santander">Santander</option><option value="BCI">BCI</option><option value="Itaú">Itaú</option><option value="Scotiabank">Scotiabank</option><option value="Falabella">Falabella</option><option value="BICE">BICE</option><option value="Tenpo">Tenpo</option><option value="Mach">Mach</option>
                 </select>
             </div>
+            <div class="form-group"><label>Tipo de Cuenta <span class="required-star">*</span></label>
+                <select id="tipoCuenta" required>
+                    <option value="">-- Seleccione Tipo --</option>
+                    <option value="Cuenta Corriente">Cuenta Corriente</option>
+                    <option value="Cuenta Vista">Cuenta Vista</option>
+                    <option value="Cuenta RUT">Cuenta RUT</option>
+                </select>
+            </div>
             <div class="form-group"><label>N° de Cuenta <span class="required-star">*</span></label><input type="text" id="numeroCuenta" placeholder="Ej: 123456789" required></div>
         </div>
 
@@ -168,33 +176,17 @@
     const form = document.getElementById('portal-form');
     const inputTelefono = document.getElementById('telefono');
 
-    // CONTROL INTELIGENTE DEL TELÉFONO: Bloquea borrar el prefijo y limita a 8 números
     inputTelefono.addEventListener('input', function(e) {
         const prefix = "+56 9 ";
-        
-        // Si el usuario intenta borrar el prefijo, se restaura automáticamente
-        if (!inputTelefono.value.startsWith(prefix)) {
-            inputTelefono.value = prefix;
-        }
-
-        // Extraer solo la parte numérica ingresada después del prefijo
+        if (!inputTelefono.value.startsWith(prefix)) { inputTelefono.value = prefix; }
         let numPart = inputTelefono.value.substring(prefix.length).replace(/\D/g, '');
-        
-        // Limitar estrictamente a un máximo de 8 caracteres numéricos
-        if (numPart.length > 8) {
-            numPart = numPart.substring(0, 8);
-        }
-
-        // Reconstruir el valor final en el campo
+        if (numPart.length > 8) { numPart = numPart.substring(0, 8); }
         inputTelefono.value = prefix + numPart;
     });
 
-    // Evita que el cursor se mueva antes del prefijo al hacer clic
     inputTelefono.addEventListener('click', function() {
         const prefix = "+56 9 ";
-        if (inputTelefono.selectionStart < prefix.length) {
-            inputTelefono.setSelectionRange(prefix.length, prefix.length);
-        }
+        if (inputTelefono.selectionStart < prefix.length) { inputTelefono.setSelectionRange(prefix.length, prefix.length); }
     });
 
     const toBase64 = file => new Promise((resolve, reject) => {
@@ -207,7 +199,6 @@
     form.addEventListener('submit', async e => {
         e.preventDefault();
         
-        // Validación extra de seguridad para el largo del teléfono al enviar
         const numPart = inputTelefono.value.substring(6).replace(/\D/g, '');
         if (numPart.length !== 8) {
             alert("Por favor, complete los 8 dígitos correspondientes a su número de teléfono celular.");
@@ -226,7 +217,7 @@
             fechaNacimiento: document.getElementById('fechaNacimiento').value,
             estadoCivil: document.getElementById('estadoCivil').value,
             direccion: document.getElementById('direccion').value,
-            telefono: inputTelefono.value, // Envía el formato completo "+56 9 XXXXXXXX"
+            telefono: inputTelefono.value,
             correo: document.getElementById('correo').value,
             fechaIngreso: document.getElementById('fechaIngreso').value,
             plazoContrato: document.getElementById('plazoContrato').value,
@@ -237,6 +228,7 @@
             afp: document.getElementById('afp').value,
             salud: document.getElementById('salud').value,
             banco: document.getElementById('banco').value,
+            tipoCuenta: document.getElementById('tipoCuenta').value, // NUEVO DATO ENVIADO
             numeroCuenta: document.getElementById('numeroCuenta').value,
             files: {}
         };
@@ -258,7 +250,7 @@
                 alerta.className = 'alerta exito';
                 alerta.innerText = '¡Proceso Completado! Documentación recibida y archivada en su expediente.';
                 form.reset();
-                inputTelefono.value = "+56 9 "; // Mantiene el prefijo listo tras reiniciar
+                inputTelefono.value = "+56 9 ";
             } else { throw new Error(res.error); }
         })
         .catch(err => {
