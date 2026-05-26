@@ -104,7 +104,7 @@
                 </select>
             </div>
         </div>
-        <div class="form-group" style="margin-top:15px;"><label>Sueldo Líquido Pactado ($) <span class="required-star">*</span></label><input type="number" id="sueldo" placeholder="Ej: 800000" required></div>
+        <div class="form-group" style="margin-top:15px;"><label>Sueldo Líquido Pactado <span class="required-star">*</span></label><input type="text" id="sueldo" value="$ " required></div>
 
         <h3>4. Previsión y Salud</h3>
         <div class="form-row">
@@ -117,14 +117,7 @@
             <div class="form-group"><label>Sistema de Salud <span class="required-star">*</span></label>
                 <select id="salud" required>
                     <option value="">-- Seleccione Salud --</option>
-                    <option value="Fonasa">Fonasa</option>
-                    <option value="Banmédica">Isapre Banmédica</option>
-                    <option value="Colmena">Isapre Colmena</option>
-                    <option value="Consalud">Isapre Consalud</option>
-                    <option value="Cruz Blanca">Isapre Cruz Blanca</option>
-                    <option value="Nueva Masvida">Isapre Nueva Masvida</option>
-                    <option value="Vida Tres">Isapre Vida Tres</option>
-                    <option value="ISALUD">Isapre ISALUD</option>
+                    <option value="Fonasa">Fonasa</option><option value="Banmédica">Isapre Banmédica</option><option value="Colmena">Isapre Colmena</option><option value="Consalud">Isapre Consalud</option><option value="Cruz Blanca">Isapre Cruz Blanca</option><option value="Nueva Masvida">Isapre Nueva Masvida</option><option value="Vida Tres">Isapre Vida Tres</option><option value="ISALUD">Isapre ISALUD</option>
                 </select>
             </div>
         </div>
@@ -174,8 +167,9 @@
     const scriptURL = 'https://script.google.com/macros/s/AKfycbx7wFzVpimtZoiburb_1cJ1vNx21VQQCRH4hiIw52xcdtguc8tzXrdwRZzYFG1YinLdLA/exec';
 
     const form = document.getElementById('portal-form');
+    
+    // --- CONTROL DEL TELÉFONO ---
     const inputTelefono = document.getElementById('telefono');
-
     inputTelefono.addEventListener('input', function(e) {
         const prefix = "+56 9 ";
         if (!inputTelefono.value.startsWith(prefix)) { inputTelefono.value = prefix; }
@@ -183,10 +177,30 @@
         if (numPart.length > 8) { numPart = numPart.substring(0, 8); }
         inputTelefono.value = prefix + numPart;
     });
-
     inputTelefono.addEventListener('click', function() {
         const prefix = "+56 9 ";
         if (inputTelefono.selectionStart < prefix.length) { inputTelefono.setSelectionRange(prefix.length, prefix.length); }
+    });
+
+    // --- CONTROL DEL SUELDO (NUEVO) ---
+    const inputSueldo = document.getElementById('sueldo');
+    inputSueldo.addEventListener('input', function(e) {
+        const prefix = "$ ";
+        if (!inputSueldo.value.startsWith(prefix)) { inputSueldo.value = prefix; }
+        
+        // Extrae solo los números
+        let numPart = inputSueldo.value.substring(prefix.length).replace(/\D/g, '');
+        
+        // Aplica el formato de miles si hay números
+        if (numPart !== "") {
+            numPart = parseInt(numPart, 10).toLocaleString('es-CL');
+        }
+        
+        inputSueldo.value = prefix + numPart;
+    });
+    inputSueldo.addEventListener('click', function() {
+        const prefix = "$ ";
+        if (inputSueldo.selectionStart < prefix.length) { inputSueldo.setSelectionRange(prefix.length, prefix.length); }
     });
 
     const toBase64 = file => new Promise((resolve, reject) => {
@@ -202,6 +216,13 @@
         const numPart = inputTelefono.value.substring(6).replace(/\D/g, '');
         if (numPart.length !== 8) {
             alert("Por favor, complete los 8 dígitos correspondientes a su número de teléfono celular.");
+            return;
+        }
+
+        // Limpia el sueldo antes de enviar (ej: de "$ 1.250.000" a "1250000")
+        const sueldoLimpio = inputSueldo.value.replace(/\D/g, '');
+        if (sueldoLimpio === "") {
+            alert("Por favor, ingrese el sueldo líquido pactado.");
             return;
         }
 
@@ -224,11 +245,11 @@
             sucursal: document.getElementById('sucursal').value,
             cargo: document.getElementById('cargo').value,
             jornada: document.getElementById('jornada').value,
-            sueldo: document.getElementById('sueldo').value,
+            sueldo: sueldoLimpio, // Se envía limpio al Google Script
             afp: document.getElementById('afp').value,
             salud: document.getElementById('salud').value,
             banco: document.getElementById('banco').value,
-            tipoCuenta: document.getElementById('tipoCuenta').value, // NUEVO DATO ENVIADO
+            tipoCuenta: document.getElementById('tipoCuenta').value,
             numeroCuenta: document.getElementById('numeroCuenta').value,
             files: {}
         };
@@ -251,6 +272,7 @@
                 alerta.innerText = '¡Proceso Completado! Documentación recibida y archivada en su expediente.';
                 form.reset();
                 inputTelefono.value = "+56 9 ";
+                inputSueldo.value = "$ ";
             } else { throw new Error(res.error); }
         })
         .catch(err => {
