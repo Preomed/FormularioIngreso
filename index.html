@@ -24,6 +24,11 @@
         .btn-enviar { width: 100%; padding: 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 30px; transition: 0.3s; }
         .btn-enviar:hover { background-color: #218838; }
         .loading { display: none; text-align: center; color: #0056b3; font-weight: bold; margin-top: 20px; }
+        
+        /* NUEVOS ESTILOS PARA LA BARRA DE PROGRESO */
+        .progress-container { width: 100%; background-color: #e0e0e0; border-radius: 5px; margin-top: 15px; overflow: hidden; height: 12px; }
+        .progress-bar { height: 100%; width: 0%; background-color: #0056b3; transition: width 0.4s ease; }
+        
         .alerta { display: none; padding: 20px; border-radius: 5px; text-align: center; margin-top: 20px; font-weight: bold; }
         .exito { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
@@ -165,7 +170,14 @@
         </table>
 
         <button type="submit" class="btn-enviar" id="btn-portal">Finalizar e Iniciar Incorporación</button>
-        <div id="loading" class="loading">Subiendo archivos y generando expediente... espere un momento por favor.</div>
+        
+        <div id="loading" class="loading">
+            Subiendo archivos y generando expediente... espere un momento por favor.
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+        </div>
+
         <div id="alerta" class="alerta"></div>
     </form>
 </div>
@@ -175,21 +187,18 @@
 
     const form = document.getElementById('portal-form');
     
-    // --- CONTROL DE NOMBRES, APELLIDOS, COMUNA Y NACIONALIDAD (LETRAS, ESPACIOS Y GUIONES) ---
-    // Se agregó 'nacionalidad' al array de validación
+    // --- CONTROL DE NOMBRES, APELLIDOS, COMUNA Y NACIONALIDAD ---
     const textFields = ['nombres', 'apellidoPaterno', 'apellidoMaterno', 'comuna', 'nacionalidad'];
     textFields.forEach(id => {
         const input = document.getElementById(id);
         input.addEventListener('input', function() {
-            // Elimina todo lo que NO sea letra (a-z, A-Z), vocales con tilde, ñ, espacio o guion
             this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]/g, '');
         });
     });
 
-    // --- CONTROL DE N° DE CUENTA (SOLO NÚMEROS) ---
+    // --- CONTROL DE N° DE CUENTA ---
     const inputNumeroCuenta = document.getElementById('numeroCuenta');
     inputNumeroCuenta.addEventListener('input', function() {
-        // Elimina cualquier carácter que no sea un dígito numérico
         this.value = this.value.replace(/\D/g, '');
     });
 
@@ -264,8 +273,11 @@
             return;
         }
 
+        // --- INICIO DE LÓGICA DE BARRA DE PROGRESO ---
         document.getElementById('btn-portal').style.display = 'none';
         document.getElementById('loading').style.display = 'block';
+        const progressBar = document.getElementById('progress-bar');
+        progressBar.style.width = '5%'; // Inicia un poquito para mostrar que arrancó
 
         const data = {
             rut: document.getElementById('rut').value,
@@ -295,32 +307,58 @@
 
         const fileIds = { afp:'f_afp', salud:'f_salud', cedula:'f_cedula', cv:'f_cv', vacunas:'f_vacunas', antecedentes:'f_antecedentes', domicilio:'f_domicilio', titulo:'f_titulo', cargas:'f_cargas', carta:'f_carta' };
         
+        // Fase 1: Lectura de archivos (Avanza la barra hasta el 40%)
+        const activeFiles = Object.keys(fileIds).filter(key => document.getElementById(fileIds[key]).files.length > 0);
+        let filesProcessed = 0;
+
         for (const [key, id] of Object.entries(fileIds)) {
             const input = document.getElementById(id);
-            if (input.files.length > 0) data.files[key] = await toBase64(input.files[0]);
+            if (input.files.length > 0) {
+                data.files[key] = await toBase64(input.files[0]);
+                filesProcessed++;
+                progressBar.style.width = (5 + (filesProcessed / activeFiles.length) * 35) + '%';
+            }
         }
 
+        // Fase 2: Envío a servidor (Simula el progreso del 40% al 90%)
+        let currentProgress = 40;
+        const progressInterval = setInterval(() => {
+            if (currentProgress < 90) {
+                currentProgress += Math.random() * 5; // Aumenta de forma variable
+                progressBar.style.width = currentProgress + '%';
+            }
+        }, 600);
+
+        // Envío final
         fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) })
         .then(res => res.json())
         .then(res => {
-            document.getElementById('loading').style.display = 'none';
-            const alerta = document.getElementById('alerta');
-            alerta.style.display = 'block';
-            if(res.result === 'success') {
-                alerta.className = 'alerta exito';
-                alerta.innerText = '¡Proceso Completado! Documentación recibida y archivada en su expediente.';
-                form.reset();
-                inputTelefono.value = "+56 9 ";
-                inputSueldo.value = "$ ";
-            } else { throw new Error(res.error); }
+            clearInterval(progressInterval);
+            progressBar.style.width = '100%'; // Fase 3: Llegó al 100%
+            
+            setTimeout(() => { // Pequeña pausa para que el usuario vea la barra llena
+                document.getElementById('loading').style.display = 'none';
+                const alerta = document.getElementById('alerta');
+                alerta.style.display = 'block';
+                if(res.result === 'success') {
+                    alerta.className = 'alerta exito';
+                    alerta.innerText = '¡Proceso Completado! Documentación recibida y archivada en su expediente.';
+                    form.reset();
+                    inputTelefono.value = "+56 9 ";
+                    inputSueldo.value = "$ ";
+                    progressBar.style.width = '0%'; // Resetea la barra para el futuro
+                } else { throw new Error(res.error); }
+            }, 600);
         })
         .catch(err => {
+            clearInterval(progressInterval);
             document.getElementById('loading').style.display = 'none';
             document.getElementById('btn-portal').style.display = 'block';
             const alerta = document.getElementById('alerta');
             alerta.style.display = 'block';
             alerta.className = 'alerta error';
-            alerta.innerText = 'Error: ' + err.message;
+            alerta.innerText = 'Error de conexión: ' + err.message;
+            progressBar.style.width = '0%';
         });
     });
 </script>
