@@ -175,8 +175,9 @@
 
     const form = document.getElementById('portal-form');
     
-    // --- CONTROL DE NOMBRES, APELLIDOS Y COMUNA (LETRAS, ESPACIOS Y GUIONES) ---
-    const textFields = ['nombres', 'apellidoPaterno', 'apellidoMaterno', 'comuna'];
+    // --- CONTROL DE NOMBRES, APELLIDOS, COMUNA Y NACIONALIDAD (LETRAS, ESPACIOS Y GUIONES) ---
+    // Se agregó 'nacionalidad' al array de validación
+    const textFields = ['nombres', 'apellidoPaterno', 'apellidoMaterno', 'comuna', 'nacionalidad'];
     textFields.forEach(id => {
         const input = document.getElementById(id);
         input.addEventListener('input', function() {
