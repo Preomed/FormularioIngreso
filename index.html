@@ -13,6 +13,7 @@
         h3 { background-color: #0056b3; color: white; padding: 10px; border-radius: 5px; font-size: 18px; margin-top: 30px; }
         .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
         .form-group { flex: 1; display: flex; flex-direction: column; }
+        .form-group-large { flex: 2; display: flex; flex-direction: column; } /* Nueva clase para dar más espacio a la dirección */
         label { font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #555; }
         input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; box-sizing: border-box; width: 100%; }
         .doc-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #f9f9f9; }
@@ -62,7 +63,10 @@
         </div>
 
         <h3>2. Datos de Contacto</h3>
-        <div class="form-group" style="margin-bottom:15px;"><label>Dirección Particular <span class="required-star">*</span></label><input type="text" id="direccion" placeholder="Calle, Número, Comuna" required></div>
+        <div class="form-row">
+            <div class="form-group-large"><label>Dirección Particular <span class="required-star">*</span></label><input type="text" id="direccion" placeholder="Calle, Número, Depto" required></div>
+            <div class="form-group"><label>Comuna <span class="required-star">*</span></label><input type="text" id="comuna" placeholder="Ej: Providencia" required></div>
+        </div>
         <div class="form-row">
             <div class="form-group"><label>Teléfono Celular <span class="required-star">*</span></label><input type="text" id="telefono" value="+56 9 " required></div>
             <div class="form-group"><label>Correo Electrónico Personal <span class="required-star">*</span></label><input type="email" id="correo" required></div>
@@ -182,20 +186,13 @@
         if (inputTelefono.selectionStart < prefix.length) { inputTelefono.setSelectionRange(prefix.length, prefix.length); }
     });
 
-    // --- CONTROL DEL SUELDO (NUEVO) ---
+    // --- CONTROL DEL SUELDO ---
     const inputSueldo = document.getElementById('sueldo');
     inputSueldo.addEventListener('input', function(e) {
         const prefix = "$ ";
         if (!inputSueldo.value.startsWith(prefix)) { inputSueldo.value = prefix; }
-        
-        // Extrae solo los números
         let numPart = inputSueldo.value.substring(prefix.length).replace(/\D/g, '');
-        
-        // Aplica el formato de miles si hay números
-        if (numPart !== "") {
-            numPart = parseInt(numPart, 10).toLocaleString('es-CL');
-        }
-        
+        if (numPart !== "") { numPart = parseInt(numPart, 10).toLocaleString('es-CL'); }
         inputSueldo.value = prefix + numPart;
     });
     inputSueldo.addEventListener('click', function() {
@@ -219,7 +216,6 @@
             return;
         }
 
-        // Limpia el sueldo antes de enviar (ej: de "$ 1.250.000" a "1250000")
         const sueldoLimpio = inputSueldo.value.replace(/\D/g, '');
         if (sueldoLimpio === "") {
             alert("Por favor, ingrese el sueldo líquido pactado.");
@@ -238,6 +234,7 @@
             fechaNacimiento: document.getElementById('fechaNacimiento').value,
             estadoCivil: document.getElementById('estadoCivil').value,
             direccion: document.getElementById('direccion').value,
+            comuna: document.getElementById('comuna').value, // <--- NUEVO DATO RECOPILADO
             telefono: inputTelefono.value,
             correo: document.getElementById('correo').value,
             fechaIngreso: document.getElementById('fechaIngreso').value,
@@ -245,7 +242,7 @@
             sucursal: document.getElementById('sucursal').value,
             cargo: document.getElementById('cargo').value,
             jornada: document.getElementById('jornada').value,
-            sueldo: sueldoLimpio, // Se envía limpio al Google Script
+            sueldo: sueldoLimpio,
             afp: document.getElementById('afp').value,
             salud: document.getElementById('salud').value,
             banco: document.getElementById('banco').value,
