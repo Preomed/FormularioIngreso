@@ -270,6 +270,33 @@
     form.addEventListener('submit', async e => {
         e.preventDefault();
         
+        // --- 🛠️ VALIDACIÓN MATEMÁTICA DE RUT CHILENO (MÓDULO 11) ---
+        const validarRutChileno = (rutCompleto) => {
+            if (!rutCompleto || !rutCompleto.includes('-')) return false;
+            let partes = rutCompleto.split('-');
+            let numero = partes[0];
+            let dv = partes[1].toUpperCase();
+
+            let suma = 0;
+            let multiplicador = 2;
+
+            for (let i = numero.length - 1; i >= 0; i--) {
+                suma += parseInt(numero.charAt(i)) * multiplicador;
+                multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+            }
+
+            let dvCalculado = 11 - (suma % 11);
+            let dvEsperado = (dvCalculado === 11) ? '0' : (dvCalculado === 10) ? 'K' : dvCalculado.toString();
+
+            return dv === dvEsperado;
+        };
+
+        if (!validarRutChileno(inputRut.value)) {
+            alert("El RUT ingresado no es válido matemáticamente. Por favor, verifique los números y el dígito verificador.");
+            return;
+        }
+        // -----------------------------------------------------------
+
         const numTelefonoLimpio = inputTelefono.value.substring(6).replace(/\D/g, '');
         if (numTelefonoLimpio.length !== 8) {
             alert("Por favor, complete los 8 dígitos correspondientes a su número de teléfono celular.");
@@ -284,8 +311,6 @@
 
         const tipoCuentaLimpia = document.getElementById('tipoCuenta').value.replace("Cuenta ", "");
         const bancoLimpia = document.getElementById('banco').value.replace("Banco ", "");
-        
-        // 🛠️ FILTRO NUEVO: Remueve la palabra "Preomed " de la sucursal seleccionada
         const sucursalSeleccionada = document.getElementById('sucursal').value;
         const sucursalLimpia = sucursalSeleccionada.replace("Preomed ", "");
 
@@ -308,7 +333,7 @@
             correo: document.getElementById('correo').value,
             fechaIngreso: document.getElementById('fechaIngreso').value,
             plazoContrato: document.getElementById('plazoContrato').value,
-            sucursal: sucursalLimpia, // <-- Se envía SIN el prefijo "Preomed "
+            sucursal: sucursalLimpia,
             cargo: document.getElementById('cargo').value,
             jornada: document.getElementById('jornada').value,
             sueldo: sueldoLimpio,
