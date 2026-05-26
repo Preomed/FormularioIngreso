@@ -284,6 +284,10 @@
 
         const tipoCuentaLimpia = document.getElementById('tipoCuenta').value.replace("Cuenta ", "");
         const bancoLimpia = document.getElementById('banco').value.replace("Banco ", "");
+        
+        // 🛠️ FILTRO NUEVO: Remueve la palabra "Preomed " de la sucursal seleccionada
+        const sucursalSeleccionada = document.getElementById('sucursal').value;
+        const sucursalLimpia = sucursalSeleccionada.replace("Preomed ", "");
 
         document.getElementById('btn-portal').style.display = 'none';
         document.getElementById('loading').style.display = 'block';
@@ -304,7 +308,7 @@
             correo: document.getElementById('correo').value,
             fechaIngreso: document.getElementById('fechaIngreso').value,
             plazoContrato: document.getElementById('plazoContrato').value,
-            sucursal: document.getElementById('sucursal').value,
+            sucursal: sucursalLimpia, // <-- Se envía SIN el prefijo "Preomed "
             cargo: document.getElementById('cargo').value,
             jornada: document.getElementById('jornada').value,
             sueldo: sueldoLimpio,
