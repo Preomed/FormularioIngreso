@@ -234,16 +234,45 @@
 </div>
 
 <script>
-    // 🌟 URL NUEVA Y ACTUALIZADA VINCULADA DE FORMA IMPECA BLE
     const scriptURL = 'https://script.google.com/macros/s/AKfycbz86f50GOM_vhmVriUe69gTLOumRpg0GSAskT0OIcaZk37RjKx6w99jTQy8DQC-t0O58Q/exec';
     const form = document.getElementById('portal-form');
     
-    const textFields = ['nombres', 'apellidoPaterno', 'apellidoMaterno', 'comuna', 'nacionalidad'];
-    textFields.forEach(id => {
+    // 🌟 NUEVAS FUNCIONES DE FORMATO INTELIGENTE DE TEXTO
+    const formatearTitulo = (texto) => {
+        if (!texto) return "";
+        // Elimina espacios de sobra y capitaliza la primera letra de CADA palabra
+        return texto.trim().toLowerCase().split(/\s+/).map(palabra => {
+            return palabra.charAt(0).toUpperCase() + palabra.slice(1);
+        }).join(' ');
+    };
+
+    const formatearCorreo = (texto) => {
+        if (!texto) return "";
+        // Elimina espacios de sobra y deja todo en estricta minúscula
+        return texto.trim().toLowerCase();
+    };
+
+    // 🌟 EVENTOS PARA FORMATEAR VISUALMENTE MIENTRAS SE LLENA EL FORMULARIO
+    const camposTitulo = ['nombres', 'apellidoPaterno', 'apellidoMaterno', 'direccion', 'comuna', 'nacionalidad'];
+    camposTitulo.forEach(id => {
         const input = document.getElementById(id);
-        input.addEventListener('input', function() {
-            this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]/g, '');
-        });
+        if (input) {
+            // Regla de solo letras para nombres (existente)
+            if (['nombres', 'apellidoPaterno', 'apellidoMaterno', 'comuna', 'nacionalidad'].includes(id)) {
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]/g, '');
+                });
+            }
+            // Formatear a Título al salir de la casilla (blur)
+            input.addEventListener('blur', function() {
+                this.value = formatearTitulo(this.value);
+            });
+        }
+    });
+
+    const inputCorreo = document.getElementById('correo');
+    inputCorreo.addEventListener('blur', function() {
+        this.value = formatearCorreo(this.value);
     });
 
     const inputNumeroCuenta = document.getElementById('numeroCuenta');
@@ -349,18 +378,19 @@
         const progressBar = document.getElementById('progress-bar');
         progressBar.style.width = '5%';
 
+        // 🌟 FILTRO FINAL: Obligamos a que el paquete de datos se construya con el formato correcto pase lo que pase
         const data = {
             rut: document.getElementById('rut').value,
-            nombres: document.getElementById('nombres').value,
-            apellidoPaterno: document.getElementById('apellidoPaterno').value,
-            apellidoMaterno: document.getElementById('apellidoMaterno').value,
-            nacionalidad: document.getElementById('nacionalidad').value,
+            nombres: formatearTitulo(document.getElementById('nombres').value),
+            apellidoPaterno: formatearTitulo(document.getElementById('apellidoPaterno').value),
+            apellidoMaterno: formatearTitulo(document.getElementById('apellidoMaterno').value),
+            nacionalidad: formatearTitulo(document.getElementById('nacionalidad').value),
             fechaNacimiento: document.getElementById('fechaNacimiento').value,
             estadoCivil: document.getElementById('estadoCivil').value,
-            direccion: document.getElementById('direccion').value,
-            comuna: document.getElementById('comuna').value,
+            direccion: formatearTitulo(document.getElementById('direccion').value),
+            comuna: formatearTitulo(document.getElementById('comuna').value),
             telefono: numTelefonoLimpio,
-            correo: document.getElementById('correo').value,
+            correo: formatearCorreo(document.getElementById('correo').value),
             fechaIngreso: document.getElementById('fechaIngreso').value,
             plazoContrato: document.getElementById('plazoContrato').value,
             sucursal: sucursalLimpia,
