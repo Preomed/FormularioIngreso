@@ -36,6 +36,11 @@
         .auth-box { display: flex; align-items: flex-start; gap: 15px; background-color: #f4f7fa; padding: 20px; border-radius: 6px; border-left: 5px solid #0056b3; margin-top: 25px; }
         .auth-box input[type="checkbox"] { width: 22px; height: 22px; margin-top: 2px; cursor: pointer; flex-shrink: 0; }
         .auth-box label { font-weight: normal; font-size: 12.5px; color: #444; margin-bottom: 0; cursor: pointer; line-height: 1.6; text-align: justify; }
+
+        /* ESTILOS PARA EL INPUT GROUP DE DIRECCIÓN */
+        .input-group { display: flex; width: 100%; }
+        .input-group select { width: 30%; border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: none; background-color: #f9f9f9; }
+        .input-group input { width: 70%; border-top-left-radius: 0; border-bottom-left-radius: 0; }
     </style>
 </head>
 <body>
@@ -76,8 +81,23 @@
 
         <h3>2. Datos de Contacto</h3>
         <div class="form-row">
-            <div class="form-group-large"><label>Dirección Particular <span class="required-star">*</span></label><input type="text" id="direccion" placeholder="Calle, Número, Depto" required></div>
-            <div class="form-group"><label>Comuna <span class="required-star">*</span></label><input type="text" id="comuna" placeholder="Ej: Providencia" required></div>
+            <div class="form-group-large">
+                <label>Dirección Particular <span class="required-star">*</span></label>
+                <div class="input-group">
+                    <select id="tipoVia" required>
+                        <option value="">Tipo...</option>
+                        <option value="Avenida">Avenida</option>
+                        <option value="Calle">Calle</option>
+                        <option value="Pasaje">Pasaje</option>
+                    </select>
+                    <input type="text" id="direccion" placeholder="Nombre de vía, Número, Depto" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Comuna <span class="required-star">*</span></label>
+                <input type="text" id="comuna" placeholder="Ej: Providencia" list="listaComunas" required>
+                <datalist id="listaComunas"></datalist>
+            </div>
         </div>
         <div class="form-row">
             <div class="form-group"><label>Teléfono Celular <span class="required-star">*</span></label><input type="text" id="telefono" value="+56 9 " required></div>
@@ -234,6 +254,18 @@
 </div>
 
 <script>
+    // 🌟 AUTOCOMPLETADO DE COMUNAS DE CHILE
+    const comunasChile = [
+        "Algarrobo", "Alhué", "Alto Biobío", "Alto del Carmen", "Alto Hospicio", "Ancud", "Andacollo", "Angol", "Antártica", "Antofagasta", "Antuco", "Arauco", "Arica", "Aysén", "Buin", "Bulnes", "Cabildo", "Cabo de Hornos", "Cabrero", "Calama", "Calbuco", "Caldera", "Calera de Tango", "Calle Larga", "Camarones", "Camiña", "Canela", "Cañete", "Carahue", "Cartagena", "Casablanca", "Castro", "Catemu", "Cauquenes", "Cerrillos", "Cerro Navia", "Chaitén", "Chanco", "Chépica", "Chiguayante", "Chile Chico", "Chillán", "Chillán Viejo", "Chimbarongo", "Cholchol", "Chonchi", "Cisnes", "Cobquecura", "Cochamó", "Cochrane", "Codegua", "Coelemu", "Coihueco", "Coinco", "Colbún", "Colchane", "Colina", "Collipulli", "Coltauco", "Combarbalá", "Concepción", "Conchalí", "Concón", "Constitución", "Contulmo", "Copiapó", "Coquimbo", "Coronel", "Corral", "Coyhaique", "Cunco", "Curacautín", "Curacaví", "Curaco de Vélez", "Curanilahue", "Curarrehue", "Curepto", "Curicó", "Dalcahue", "Diego de Almagro", "Doñihue", "El Bosque", "El Carmen", "El Monte", "El Quisco", "El Tabo", "Empedrado", "Ercilla", "Estación Central", "Florida", "Freire", "Freirina", "Fresia", "Frutillar", "Futaleufú", "Futrono", "Galvarino", "General Lagos", "Gorbea", "Guaitecas", "Hijuelas", "Hualaihué", "Hualañé", "Hualpén", "Hualqui", "Huara", "Huasco", "Huechuraba", "Illapel", "Independencia", "Iquique", "Isla de Maipo", "Isla de Pascua", "Juan Fernández", "La Cisterna", "La Cruz", "La Estrella", "La Florida", "La Granja", "La Higuera", "La Ligua", "La Pintana", "La Reina", "La Serena", "La Unión", "Lago Ranco", "Laguna Blanca", "Laja", "Lampa", "Lanco", "Las Cabras", "Las Condes", "Lautaro", "Lebu", "Licantén", "Limache", "Linares", "Litueche", "Llanquihue", "Lo Barnechea", "Lo Espejo", "Lo Prado", "Lolol", "Loncoche", "Longaví", "Lonquimay", "Los Álamos", "Los Andes", "Los Ángeles", "Los Lagos", "Los Muermos", "Los Sauces", "Los Vilos", "Lota", "Lumaco", "Machalí", "Macul", "Máfil", "Maipú", "Malloa", "Marchihue", "María Elena", "María Pinto", "Mariquina", "Maule", "Mejillones", "Melipeuco", "Melipilla", "Molina", "Monte Patria", "Nacimiento", "Nancagua", "Natales", "Navidad", "Negrete", "Ninhue", "Ñiquén", "Nogales", "Nueva Imperial", "Ñuñoa", "O'Higgins", "Olivar", "Ollagüe", "Olmué", "Osorno", "Ovalle", "Padre Hurtado", "Padre Las Casas", "Paihuano", "Paillaco", "Paine", "Palena", "Palmilla", "Panguipulli", "Panquehue", "Papudo", "Paredones", "Parral", "Pedro Aguirre Cerda", "Pelarco", "Pelluhue", "Pemuco", "Peñaflor", "Peñalolén", "Pencahue", "Penco", "Peralillo", "Perquenco", "Petorca", "Peumo", "Pica", "Pichidegua", "Pichilemu", "Pinto", "Pirque", "Pitrufquén", "Placilla", "Portezuelo", "Porvenir", "Pozo Almonte", "Primavera", "Providencia", "Puchuncaví", "Pucón", "Pudahuel", "Puente Alto", "Puerto Montt", "Puerto Octay", "Puerto Varas", "Pumanque", "Punitaqui", "Punta Arenas", "Puqueldón", "Purén", "Purranque", "Putaendo", "Putre", "Puyehue", "Queilén", "Quellón", "Quemchi", "Quilaco", "Quilicura", "Quilleco", "Quillón", "Quillota", "Quilpué", "Quinchao", "Quinta de Tilcoco", "Quinta Normal", "Quintero", "Rancagua", "Ránquil", "Rauco", "Recoleta", "Renaico", "Renca", "Rengo", "Requínoa", "Retiro", "Rinconada", "Río Bueno", "Río Claro", "Río Hurtado", "Río Ibáñez", "Río Negro", "Romeral", "Saavedra", "Sagrada Familia", "Salamanca", "San Antonio", "San Bernardo", "San Carlos", "San Clemente", "San Esteban", "San Fabián", "San Felipe", "San Fernando", "San Gregorio", "San Ignacio", "San Javier", "San Joaquín", "San José de Maipo", "San Juan de la Costa", "San Miguel", "San Nicolás", "San Pablo", "San Pedro", "San Pedro de Atacama", "San Pedro de la Paz", "San Ramón", "San Rosendo", "San Vicente", "Santa Bárbara", "Santa Cruz", "Santa Juana", "Santa María", "Santiago", "Santo Domingo", "Sierra Gorda", "Talagante", "Talca", "Talcahuano", "Taltal", "Temuco", "Teno", "Teodoro Schmidt", "Tierra Amarilla", "Tiltil", "Timaukel", "Tirúa", "Tocopilla", "Toltén", "Tomé", "Torres del Paine", "Tortel", "Treguaco", "Tucapel", "Valdivia", "Vallenar", "Valparaíso", "Vichuquén", "Victoria", "Vicuña", "Vilcún", "Villa Alegre", "Villa Alemana", "Villarrica", "Viña del Mar", "Vitacura", "Yerbas Buenas", "Yumbel", "Yungay", "Zapallar"
+    ];
+
+    const datalistComunas = document.getElementById('listaComunas');
+    comunasChile.forEach(comuna => {
+        const option = document.createElement('option');
+        option.value = comuna;
+        datalistComunas.appendChild(option);
+    });
+
     const scriptURL = 'https://script.google.com/macros/s/AKfycbz86f50GOM_vhmVriUe69gTLOumRpg0GSAskT0OIcaZk37RjKx6w99jTQy8DQC-t0O58Q/exec';
     const form = document.getElementById('portal-form');
     
@@ -257,10 +289,10 @@
     camposTitulo.forEach(id => {
         const input = document.getElementById(id);
         if (input) {
-            // Regla de solo letras para nombres (existente)
+            // Regla de solo letras para nombres (existente). NOTA: ¡Se agregó el apóstrofe (') al final!
             if (['nombres', 'apellidoPaterno', 'apellidoMaterno', 'comuna', 'nacionalidad'].includes(id)) {
                 input.addEventListener('input', function() {
-                    this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-]/g, '');
+                    this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s\-']/g, '');
                 });
             }
             // Formatear a Título al salir de la casilla (blur)
@@ -387,7 +419,7 @@
             nacionalidad: formatearTitulo(document.getElementById('nacionalidad').value),
             fechaNacimiento: document.getElementById('fechaNacimiento').value,
             estadoCivil: document.getElementById('estadoCivil').value,
-            direccion: formatearTitulo(document.getElementById('direccion').value),
+            direccion: document.getElementById('tipoVia').value + ' ' + formatearTitulo(document.getElementById('direccion').value),
             comuna: formatearTitulo(document.getElementById('comuna').value),
             telefono: numTelefonoLimpio,
             correo: formatearCorreo(document.getElementById('correo').value),
