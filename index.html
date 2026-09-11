@@ -317,7 +317,7 @@
         }
     });
 
-    // 🌟 LÓGICA DINÁMICA DE JORNADA LABORAL POR SUCURSAL
+    // 🌟 LÓGICA DINÁMICA DE JORNADA LABORAL POR SUCURSAL Y CARGO
     const horariosPorSucursal = {
         "Preomed Antofagasta Centro": [
             "Lunes a Viernes de 08:00 a 13:00 hrs. | Sábado de 09:00 a 12:00 hrs.",
@@ -350,13 +350,23 @@
     };
 
     const selectSucursal = document.getElementById('sucursal');
+    const selectCargo = document.getElementById('cargo');
     const selectJornada = document.getElementById('jornada');
 
-    selectSucursal.addEventListener('change', function() {
-        const sucursalSel = this.value;
+    function actualizarJornada() {
+        const sucursalSel = selectSucursal.value;
+        const cargoSel = selectCargo.value || "";
+        
         selectJornada.innerHTML = '<option value="">-- Seleccione Jornada --</option>';
         
-        if (sucursalSel) {
+        // Regla prioritaria: Si el cargo es Gerente o Subgerente
+        if (cargoSel.includes('Gerente') || cargoSel.includes('Subgerente')) {
+            const opt = document.createElement('option');
+            opt.value = "Inciso 2° del Articulo 22";
+            opt.textContent = "Inciso 2° del Articulo 22";
+            selectJornada.appendChild(opt);
+        } else if (sucursalSel) {
+            // Regla normal: Basado en la sucursal seleccionada
             let opcionesList = horariosPorSucursal[sucursalSel] || horariosPorSucursal["default"];
             opcionesList.forEach(opcion => {
                 const opt = document.createElement('option');
@@ -367,7 +377,11 @@
         } else {
             selectJornada.innerHTML = '<option value="">-- Seleccione Sucursal Primero --</option>';
         }
-    });
+    }
+
+    // Escuchamos los cambios en ambos campos
+    selectSucursal.addEventListener('change', actualizarJornada);
+    selectCargo.addEventListener('change', actualizarJornada);
 
     // 🌟 AUTOCOMPLETADO DE COMUNAS DE CHILE
     const comunasChile = [
