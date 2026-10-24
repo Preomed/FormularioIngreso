@@ -365,12 +365,12 @@
             opt.value = "Inciso 2° del Articulo 22";
             opt.textContent = "Inciso 2° del Articulo 22";
             selectJornada.appendChild(opt);
-        } else if (cargoSel.includes('KAM')) {
-            const jornadasKAM = [
+        } else if (cargoSel.includes('KAM') || cargoSel.includes('Ejecutivo')) {
+            const jornadasEspeciales = [
                 "Lunes a Martes de 08:00 a 18:00 hrs. | Miércoles a Viernes de 08:00 a 17:00 hrs.",
                 "Inciso 2° del Articulo 22"
             ];
-            jornadasKAM.forEach(opcion => {
+            jornadasEspeciales.forEach(opcion => {
                 const opt = document.createElement('option');
                 opt.value = opcion;
                 opt.textContent = opcion;
