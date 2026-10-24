@@ -183,7 +183,6 @@
                 </select>
             </div>
             <div class="form-group"><label>Jornada Laboral <span class="required-star">*</span></label>
-                <!-- Las opciones ahora se cargarán dinámicamente mediante JS -->
                 <select id="jornada" required>
                     <option value="">-- Seleccione Sucursal Primero --</option>
                 </select>
@@ -261,7 +260,7 @@
             </tr>
             <tr><td class="icon">🪪</td><td>Cédula de Identidad por ambos lados <span class="required-star">*</span></td><td><input type="file" id="f_cedula" accept=".pdf,.png,.jpg" required></td></tr>
             <tr><td class="icon">📄</td><td>Currículum Vitae <span class="required-star">*</span></td><td><input type="file" id="f_cv" accept=".pdf,.png,.jpg" required></td></tr>
-            <tr><td class="icon">💉</td><td>Comprobante Vacunas COVID al día <span class="required-star">*</span></td><td><input type="file" id="f_vacunas" accept=".pdf,.png,.jpg" required></td></tr>
+            <tr><td class="icon">💉</td><td>Comprobante Vacunas COVID al día <span class="optional-tag">Opcional</span></td><td><input type="file" id="f_vacunas" accept=".pdf,.png,.jpg"></td></tr>
             <tr><td class="icon">⚖️</td><td>Certificado de Antecedentes para fines especiales <span class="required-star">*</span></td><td><input type="file" id="f_antecedentes" accept=".pdf,.png,.jpg" required></td></tr>
             <tr><td class="icon">🏠</td><td>Comprobante de domicilio <span class="required-star">*</span></td><td><input type="file" id="f_domicilio" accept=".pdf,.png,.jpg" required></td></tr>
             <tr><td class="icon">🎓</td><td>Certificado de Título Profesional o Certificado de Estudios <span class="required-star">*</span></td><td><input type="file" id="f_titulo" accept=".pdf,.png,.jpg" required></td></tr>
@@ -278,7 +277,7 @@
         <button type="submit" class="btn-enviar" id="btn-portal">Finalizar e Iniciar Incorporación</button>
         
         <div id="loading" class="loading">
-            Subiendo archivos y generando expediente... espere un momento por favor.
+            Subiendo archivos y generating expediente... espere un momento por favor.
             <div class="progress-container">
                 <div id="progress-bar" class="progress-bar"></div>
             </div>
@@ -289,14 +288,13 @@
 </div>
 
 <script>
-    // 🌟 LÓGICA DE EXCEPCIÓN DE DOCUMENTOS (AFP Y SALUD)
     document.getElementById('check_no_afp').addEventListener('change', function() {
         const fileInput = document.getElementById('f_afp');
         const star = document.getElementById('star_afp');
         if(this.checked) {
             fileInput.required = false;
             fileInput.disabled = true;
-            fileInput.value = ''; // Limpia el archivo si había uno subido
+            fileInput.value = ''; 
             star.style.display = 'none';
         } else {
             fileInput.required = true;
@@ -311,7 +309,7 @@
         if(this.checked) {
             fileInput.required = false;
             fileInput.disabled = true;
-            fileInput.value = ''; // Limpia el archivo si había uno subido
+            fileInput.value = ''; 
             star.style.display = 'none';
         } else {
             fileInput.required = true;
@@ -320,7 +318,6 @@
         }
     });
 
-    // 🌟 LÓGICA DINÁMICA DE JORNADA LABORAL POR SUCURSAL Y CARGO
     const horariosPorSucursal = {
         "Preomed Antofagasta Centro": [
             "Lunes a Viernes de 08:00 a 13:00 hrs. | Sábado de 09:00 a 12:00 hrs.",
@@ -347,7 +344,7 @@
             "Lunes a Sábado de 08:00 a 13:00 hrs.",
             "Lunes a Viernes de 13:00 a 15:00 hrs. | Sábado de 11:00 a 13:00 hrs."
         ],
-        "default": [ // Para Arica, Concepción, Copiapó, Iquique, Ovalle, Puerto Montt, Salamanca, Vallenar
+        "default": [ 
             "Lunes a Miércoles de 08:00 a 17:00 hrs. | Jueves a Viernes de 08:00 a 16:00 hrs.| Sábado de 09:00 a 13:00 hrs.",
             "Lunes a Sábado de 08:00 a 13:00 hrs."
         ]
@@ -363,14 +360,18 @@
         
         selectJornada.innerHTML = '<option value="">-- Seleccione Jornada --</option>';
         
-        // Regla prioritaria: Si el cargo es Gerente o Subgerente
         if (cargoSel.includes('Gerente') || cargoSel.includes('Subgerente')) {
             const opt = document.createElement('option');
             opt.value = "Inciso 2° del Articulo 22";
             opt.textContent = "Inciso 2° del Articulo 22";
             selectJornada.appendChild(opt);
+        } else if (cargoSel.includes('KAM')) {
+            const opt = document.createElement('option');
+            const jornadaKAM = "Lunes a Martes de 08:00 a 18:00 hrs. | Miércoles a Viernes de 08:00 a 17:00 hrs.; Inciso 2° del Articulo 22";
+            opt.value = jornadaKAM;
+            opt.textContent = jornadaKAM;
+            selectJornada.appendChild(opt);
         } else if (sucursalSel) {
-            // Regla normal: Basado en la sucursal seleccionada
             let opcionesList = horariosPorSucursal[sucursalSel] || horariosPorSucursal["default"];
             opcionesList.forEach(opcion => {
                 const opt = document.createElement('option');
@@ -383,11 +384,9 @@
         }
     }
 
-    // Escuchamos los cambios en ambos campos
     selectSucursal.addEventListener('change', actualizarJornada);
     selectCargo.addEventListener('change', actualizarJornada);
 
-    // 🌟 AUTOCOMPLETADO DE COMUNAS DE CHILE
     const comunasChile = [
         "Algarrobo", "Alhué", "Alto Biobío", "Alto del Carmen", "Alto Hospicio", "Ancud", "Andacollo", "Angol", "Antártica", "Antofagasta", "Antuco", "Arauco", "Arica", "Aysén", "Buin", "Bulnes", "Cabildo", "Cabo de Hornos", "Cabrero", "Calama", "Calbuco", "Caldera", "Calera de Tango", "Calle Larga", "Camarones", "Camiña", "Canela", "Cañete", "Carahue", "Cartagena", "Casablanca", "Castro", "Catemu", "Cauquenes", "Cerrillos", "Cerro Navia", "Chaitén", "Chanco", "Chépica", "Chiguayante", "Chile Chico", "Chillán", "Chillán Viejo", "Chimbarongo", "Cholchol", "Chonchi", "Cisnes", "Cobquecura", "Cochamó", "Cochrane", "Codegua", "Coelemu", "Coihueco", "Coinco", "Colbún", "Colchane", "Colina", "Collipulli", "Coltauco", "Combarbalá", "Concepción", "Conchalí", "Concón", "Constitución", "Contulmo", "Copiapó", "Coquimbo", "Coronel", "Corral", "Coyhaique", "Cunco", "Curacautín", "Curacaví", "Curaco de Vélez", "Curanilahue", "Curarrehue", "Curepto", "Curicó", "Dalcahue", "Diego de Almagro", "Doñihue", "El Bosque", "El Carmen", "El Monte", "El Quisco", "El Tabo", "Empedrado", "Ercilla", "Estación Central", "Florida", "Freire", "Freirina", "Fresia", "Frutillar", "Futaleufú", "Futrono", "Galvarino", "General Lagos", "Gorbea", "Guaitecas", "Hijuelas", "Hualaihué", "Hualañé", "Hualpén", "Hualqui", "Huara", "Huasco", "Huechuraba", "Illapel", "Independencia", "Iquique", "Isla de Maipo", "Isla de Pascua", "Juan Fernández", "La Cisterna", "La Cruz", "La Estrella", "La Florida", "La Granja", "La Higuera", "La Ligua", "La Pintana", "La Reina", "La Serena", "La Unión", "Lago Ranco", "Laguna Blanca", "Laja", "Lampa", "Lanco", "Las Cabras", "Las Condes", "Lautaro", "Lebu", "Licantén", "Limache", "Linares", "Litueche", "Llanquihue", "Lo Barnechea", "Lo Espejo", "Lo Prado", "Lolol", "Loncoche", "Longaví", "Lonquimay", "Los Álamos", "Los Andes", "Los Ángeles", "Los Lagos", "Los Muermos", "Los Sauces", "Los Vilos", "Lota", "Lumaco", "Machalí", "Macul", "Máfil", "Maipú", "Malloa", "Marchihue", "María Elena", "María Pinto", "Mariquina", "Maule", "Mejillones", "Melipeuco", "Melipilla", "Molina", "Monte Patria", "Nacimiento", "Nancagua", "Natales", "Navidad", "Negrete", "Ninhue", "Ñiquén", "Nogales", "Nueva Imperial", "Ñuñoa", "O'Higgins", "Olivar", "Ollagüe", "Olmué", "Osorno", "Ovalle", "Padre Hurtado", "Padre Las Casas", "Paihuano", "Paillaco", "Paine", "Palena", "Palmilla", "Panguipulli", "Panquehue", "Papudo", "Paredones", "Parral", "Pedro Aguirre Cerda", "Pelarco", "Pelluhue", "Pemuco", "Peñaflor", "Peñalolén", "Pencahue", "Penco", "Peralillo", "Perquenco", "Petorca", "Peumo", "Pica", "Pichidegua", "Pichilemu", "Pinto", "Pirque", "Pitrufquén", "Placilla", "Portezuelo", "Porvenir", "Pozo Almonte", "Primavera", "Providencia", "Puchuncaví", "Pucón", "Pudahuel", "Puente Alto", "Puerto Montt", "Puerto Octay", "Puerto Varas", "Pumanque", "Punitaqui", "Punta Arenas", "Puqueldón", "Purén", "Purranque", "Putaendo", "Putre", "Puyehue", "Queilén", "Quellón", "Quemchi", "Quilaco", "Quilicura", "Quilleco", "Quillón", "Quillota", "Quilpué", "Quinchao", "Quinta de Tilcoco", "Quinta Normal", "Quintero", "Rancagua", "Ránquil", "Rauco", "Recoleta", "Renaico", "Renca", "Rengo", "Requínoa", "Retiro", "Rinconada", "Río Bueno", "Río Claro", "Río Hurtado", "Río Ibáñez", "Río Negro", "Romeral", "Saavedra", "Sagrada Familia", "Salamanca", "San Antonio", "San Bernardo", "San Carlos", "San Clemente", "San Esteban", "San Fabián", "San Felipe", "San Fernando", "San Gregorio", "San Ignacio", "San Javier", "San Joaquín", "San José de Maipo", "San Juan de la Costa", "San Miguel", "San Nicolás", "San Pablo", "San Pedro", "San Pedro de Atacama", "San Pedro de la Paz", "San Ramón", "San Rosendo", "San Vicente", "Santa Bárbara", "Santa Cruz", "Santa Juana", "Santa María", "Santiago", "Santo Domingo", "Sierra Gorda", "Talagante", "Talca", "Talcahuano", "Taltal", "Temuco", "Teno", "Teodoro Schmidt", "Tierra Amarilla", "Tiltil", "Timaukel", "Tirúa", "Tocopilla", "Toltén", "Tomé", "Torres del Paine", "Tortel", "Treguaco", "Tucapel", "Valdivia", "Vallenar", "Valparaíso", "Vichuquén", "Victoria", "Vicuña", "Vilcún", "Villa Alegre", "Villa Alemana", "Villarrica", "Viña del Mar", "Vitacura", "Yerbas Buenas", "Yumbel", "Yungay", "Zapallar"
     ];
@@ -402,7 +401,6 @@
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzv-crPhXQ1J5z8qUKEpAOUU57I7it06mikR5Rix7n60-nUSLqNAIuhpWFX2V2y5mF9wg/exec';
     const form = document.getElementById('portal-form');
     
-    // 🌟 NUEVAS FUNCIONES DE FORMATO INTELIGENTE DE TEXTO
     const formatearTitulo = (texto) => {
         if (!texto) return "";
         return texto.trim().toLowerCase().split(/\s+/).map(palabra => {
@@ -415,7 +413,6 @@
         return texto.trim().toLowerCase();
     };
 
-    // 🌟 EVENTOS PARA FORMATEAR VISUALMENTE MIENTRAS SE LLENA EL FORMULARIO
     const camposTitulo = ['nombres', 'apellidoPaterno', 'apellidoMaterno', 'direccion', 'comuna', 'nacionalidad'];
     camposTitulo.forEach(id => {
         const input = document.getElementById(id);
@@ -539,7 +536,6 @@
         const progressBar = document.getElementById('progress-bar');
         progressBar.style.width = '5%';
 
-        // 🌟 FILTRO FINAL
         const data = {
             rut: document.getElementById('rut').value,
             nombres: formatearTitulo(document.getElementById('nombres').value),
@@ -571,13 +567,11 @@
         const activeFiles = Object.keys(fileIds).filter(key => document.getElementById(fileIds[key]).files.length > 0);
         let filesProcessed = 0;
 
-        // Subida de archivos solo si existen
         for (const [key, id] of Object.entries(fileIds)) {
             const input = document.getElementById(id);
             if (input.files && input.files.length > 0) {
                 data.files[key] = await toBase64(input.files[0]);
                 filesProcessed++;
-                // Evitamos division por cero si activeFiles.length es 0 (aunque por validación required no debería serlo)
                 if (activeFiles.length > 0) {
                     progressBar.style.width = (5 + (filesProcessed / activeFiles.length) * 35) + '%';
                 }
@@ -608,8 +602,7 @@
                     form.reset();
                     inputTelefono.value = "+56 9 ";
                     inputSueldo.value = "$ ";
-                    selectJornada.innerHTML = '<option value="">-- Seleccione Sucursal Primero --</option>'; // Limpiar jornada
-                    // Restaurar asteriscos e inputs
+                    selectJornada.innerHTML = '<option value="">-- Seleccione Sucursal Primero --</option>'; 
                     document.getElementById('f_afp').disabled = false;
                     document.getElementById('f_salud').disabled = false;
                     document.getElementById('star_afp').style.display = 'inline';
